@@ -20,3 +20,4 @@ webpack.config.prod.js
 .gitattributes
 .idea
 .gitignore
+recycling.json
