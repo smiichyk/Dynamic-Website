@@ -1,71 +1,58 @@
 <!doctype html>
 <html class="no-js" lang="">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EcoData</title>
   <link rel="stylesheet" href="css/style.css">
   <meta name="description" content="">
-
   <meta property="og:title" content="">
   <meta property="og:type" content="">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
   <meta property="og:image:alt" content="">
-
   <link rel="icon" href="img/logo.jpg">
-
-  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
 </head>
 
-<body>
+<body onload="displayTable(materialsToDisplay)"> <!-- Calls function when the page loads -->
+<div id="wrapper">
   <header>
-    <div id="materials">
-      <ul>
-        <li>
-          <img src="img/all.jpg" width="200"/>
-          <h2>All</h2>
-        </li>
-        <li>
-          <img src="img/plastic.jpg" width="200"/>
-          <h2>PLASTIC</h2>
-        </li>
-        <li>
-          <img src="img/glass.jpg" width="200"/>
-          <h2>GLASS</h2>
-        </li>
-        <li>
-          <img src="img/metal.jpg" width="200"/>
-          <h2>METAL</h2>
-        </li>
-        <li>
-          <img src="img/paper.jpg" width="200"/>
-          <h2>PAPER</h2>
-        </li>
-        <li>
-          <img src="img/organic.jpg" width="200"/>
-          <h2>ORGANIC WASTE</h2>
-        </li>
-      </ul>
-    </div>
-    <div id="categories">
-      <h3>name</h3>
-      <h3>recycling code</h3>
-      <h3>recycling process</h3>
-      <h3>accepted items</h3>
-      <h3>non accepted items</h3>
-      <h3>recyclability</h3>
-      <h3>environmental impact</h3>
-    </div>
+    <!-- Buttons for filtering categories -->
+    <button onclick="displayByType('All', this)">
+      <img src="img/header/all.png" width="150" alt="all_button"/>
+      <h2>All</h2>
+    </button>
+    <button onclick="displayByType('Plastic', this)">
+      <img src="img/header/plastic.png" width="150" alt="plastic_button"/>
+      <h2>PLASTIC</h2>
+    </button>
+    <button onclick="displayByType('Glass', this)">
+      <img src="img/header/glass.png" width="150" alt="glass_button"/>
+      <h2>GLASS</h2>
+    </button>
+    <button onclick="displayByType('Metal', this)">
+      <img src="img/header/metal.png" width="150" alt="metal_button"/>
+      <h2>METAL</h2>
+    </button>
+    <button onclick="displayByType('Paper',this)">
+      <img src="img/header/paper.png" width="150" alt="paper_button"/>
+      <h2>PAPER</h2>
+    </button>
+    <button onclick="displayByType('Organic Waste', this)">
+      <img src="img/header/organic.png" width="150" alt="organic_waste_button"/>
+      <h2>ORGANIC WASTE</h2>
+    </button>
   </header>
   <main>
-
+    <fieldset id="addCategory" class="modalWindow"></fieldset>
+    <fieldset id="modifyCategory" class="modalWindow"></fieldset>
+    <fieldset id="modifyTag" class="modalWindow"></fieldset>
+    <fieldset id="displayTableRow" class="modalWindow"></fieldset>
+    <div id="categoriesTable"></div>
   </main>
-  <footer>
-
-  </footer>
+</div>
+<script src="js/app.js"></script>
 </body>
 
 </html>

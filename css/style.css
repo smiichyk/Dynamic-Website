@@ -2,42 +2,43 @@
 
 body {
   padding: 0; margin: 0;
-  background: rgb(230, 240, 220);
+  background: #102313;
 }
 
-#materials {
+header {
   margin: 0; padding: 0;
-  background: linear-gradient(to right, rgb(30, 130, 70), rgb(20, 40, 30));
-}
-
-#categories {
-  margin: 0; padding: 10px;
-  background: yellowgreen;
+  background: rgb(39, 103, 65);
   display: flex;
-  justify-content: space-around
+  align-items: stretch;
 }
 
-header ul {
-  margin: 0; padding: 0;
-  list-style-type: none;
-  display: flex;
-}
-
-header li {
+header button {
   margin: 0;
   padding: 0 15px 0 15px;
-  border: 1px solid yellowgreen;
-  box-shadow: inset -20px 0 20px -10px rgba(20, 40, 30, 0.4), inset 20px 0 20px -10px rgba(20, 40, 30, 0.4);
+  border-top: 0;
+  border-right: 1px solid #264926;
+  border-bottom: 0;
+  border-left: 0;
+  box-shadow: inset -20px 0 20px -10px rgba(62 126 94 / 40%), inset 20px 0 20px -10px rgba(20, 40, 30, 0.4);
   text-align: center;
   flex: 1;
+  background: none;
 }
 
-header a {
-  color: white;
+header button.active h2 {
+  margin: 20px 0 0 0; padding: 20px 0 20px 0;
+  color: black;
+  background: yellowgreen;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header button:hover {
+  background: #4caf5035;
 }
 
 header h2 {
-  margin: 0; padding: 120px 0 70px 0;
+  margin: 0; padding: 40px 0 20px 0;
   font-family: "Comfortaa", serif;
   font-optical-sizing: auto;
   font-weight: 600;
@@ -47,28 +48,175 @@ header h2 {
   text-shadow: 0 0 30px rgb(20, 40, 30);
 }
 
-header li:hover h2 {
-  margin: 174px 0 0 0;
-  padding: 8px 0 8px 0;
-  color: black;
+header  img {
+  padding: 50px 0 0 0; margin: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  align-content: center;
   background: yellowgreen;
-  border-radius: 15px 15px 0 0;
+  font-family: 'Arial', sans-serif;
 }
 
-header img {
-  border-radius: 0 0 15px 15px;
+td, th {
+  padding: 15px;
+  font-size: 20px;
+  text-align: center;
 }
 
-#categories h3 {
-  margin: 0;
-  padding: 3px;
-  font-family: "Comfortaa", serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-  font-size: 15px;
+td {
+  border: 1px solid wheat;
 }
 
-#categories {
-
+button {
+  background: none;
+  border: none;
 }
+
+#name {
+  background: yellowgreen;
+}
+
+fieldset  {
+  width: 100%;
+  margin: 0; padding: 10px;
+  border: 0;
+  background: yellowgreen;
+  align-items: center;
+}
+
+#displayTableRow {
+  margin: 0; padding: 20px;
+  background: yellowgreen;
+}
+
+#addCategory, #modifyCategory {
+  padding: 40px;
+}
+
+#addTag {
+  margin: 0; padding: 20px 50px;
+}
+
+input, select, #addCategoryButton, #modifyCategoryButton {
+  margin: 3px; padding: 10px;
+  border-radius: 15px;
+  border: 1px solid green;
+}
+
+#addCategoryButton, #modifyCategoryButton {
+  background: yellowgreen;
+}
+
+.helpButton {
+  background: #ff6868;
+  border-radius: 50px;
+  border: 1px solid black;
+}
+
+.imageInput {
+  background: #dfdfdf;
+}
+
+.tags {
+  margin: 0; padding: 10px;
+  color: white;
+  border-radius: 20px;
+}
+
+.modalWindow {
+  margin: 5px; padding: 20px;
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  max-width: 600px;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid green;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/*@media (min-width: 500px) {*/
+
+/*}*/
+
+/*@media (max-width: 1340px) {*/
+/*  th {*/
+/*    display: none;*/
+/*  }*/
+
+/*  tr {*/
+/*    border-bottom: 8px solid grey;*/
+/*  }*/
+
+/*  td {*/
+/*    padding-left: 0;*/
+/*    display: block;*/
+/*  }*/
+
+/*  !*    tr {*/
+/*      text-align: right;    padding-left: 50%;*/
+/*      position: relative;    border-bottom: 1px solid #ddd;*/
+/*      }*/
+/*  *!*/
+
+/*  td::before {*/
+/*    position: static;*/
+/*    content: attr(data-label);*/
+/*    display: block;*/
+/*    font-weight: bold;*/
+/*    font-size: 20px;*/
+/*    padding-bottom: 15px;*/
+/*    !*  text-align: left;*/
+/*        max-width: 20%;*/
+/*        display: inline-block;*/
+/*        word-wrap: break-word;*!*/
+/*  }*/
+
+/*  !* fieldset {*/
+/*     display: grid;*/
+/*     grid-template-columns: 1fr;*/
+/*  }*!*/
+
+/*  header img {*/
+/*    display: none;*/
+/*  }*/
+
+/*  !* header button img {*/
+/*     width: 90px;*/
+/*  }*!*/
+
+/*  header button h2 {*/
+/*    font-size: 12px;*/
+/*  }*/
+/*}*/
