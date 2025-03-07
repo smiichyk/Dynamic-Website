@@ -68,6 +68,7 @@ td, th {
 
 td {
   border: 1px solid wheat;
+  position: relative;
 }
 
 button {
@@ -108,16 +109,6 @@ input, select, #addCategoryButton, #modifyCategoryButton {
 
 #addCategoryButton, #modifyCategoryButton {
   background: yellowgreen;
-}
-
-.helpButton {
-  background: #ff6868;
-  border-radius: 50px;
-  border: 1px solid black;
-}
-
-.imageInput {
-  background: #dfdfdf;
 }
 
 .tags {
@@ -166,57 +157,78 @@ input, select, #addCategoryButton, #modifyCategoryButton {
   cursor: pointer;
 }
 
-/*@media (min-width: 500px) {*/
+@media (min-width: 501px) and (max-width: 1340px) {
+  header button.active h2 {
+    background: none;
+    box-shadow: none;
+  }
 
-/*}*/
+  th {
+    display: none;
+  }
 
-/*@media (max-width: 1340px) {*/
-/*  th {*/
-/*    display: none;*/
-/*  }*/
+  tr {
+    border-bottom: 8px solid grey;
+  }
+  td {
+    padding-right: 15%;
+    padding-left: 40%;
+    display: block;
+    font-size: 25px;
+  }
+  td::before {
+    position: absolute;
+    content: attr(data-label);
+    display: block;
+    font-weight: bold;
+    font-size: 25px;
+    padding-bottom: 15px;
+    text-align: left;
+    left: 2%;
+  }
 
-/*  tr {*/
-/*    border-bottom: 8px solid grey;*/
-/*  }*/
+  header  img {
+    display: none;
+  }
 
-/*  td {*/
-/*    padding-left: 0;*/
-/*    display: block;*/
-/*  }*/
+  header button h2 {
+    font-size: 20px;
+  }
+}
 
-/*  !*    tr {*/
-/*      text-align: right;    padding-left: 50%;*/
-/*      position: relative;    border-bottom: 1px solid #ddd;*/
-/*      }*/
-/*  *!*/
+@media (max-width: 500px) {
+  header button.active h2 {
+    background: none;
+    box-shadow: none;
+  }
 
-/*  td::before {*/
-/*    position: static;*/
-/*    content: attr(data-label);*/
-/*    display: block;*/
-/*    font-weight: bold;*/
-/*    font-size: 20px;*/
-/*    padding-bottom: 15px;*/
-/*    !*  text-align: left;*/
-/*        max-width: 20%;*/
-/*        display: inline-block;*/
-/*        word-wrap: break-word;*!*/
-/*  }*/
+  th {
+    display: none;
+  }
 
-/*  !* fieldset {*/
-/*     display: grid;*/
-/*     grid-template-columns: 1fr;*/
-/*  }*!*/
+  tr {
+    border-bottom: 8px solid grey;
+  }
 
-/*  header img {*/
-/*    display: none;*/
-/*  }*/
+  td {
+    padding-left: 0;
+    display: block;
+  }
 
-/*  !* header button img {*/
-/*     width: 90px;*/
-/*  }*!*/
+  td::before {
+    position: static;
+    content: attr(data-label);
+    display: block;
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 15px;
+  }
 
-/*  header button h2 {*/
-/*    font-size: 12px;*/
-/*  }*/
-/*}*/
+  header img {
+    display: none;
+  }
+
+  header button h2 {
+    font-size: 12px;
+  }
+}
