@@ -235,7 +235,7 @@ function displayTable(materials) {
   // Add category button column
   htmlString += `<th>
                     <button onclick="addCategoryInput()">
-                        <img src='img/work_with_category/add.png' height="50" alt="add_button"/>
+                        <img src="img/work_with_category/add.png" height="50" alt="add_button"/>
                     </button>
                  </th>`
   htmlString += `</tr>`

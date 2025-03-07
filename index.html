@@ -15,11 +15,11 @@
   <meta name="theme-color" content="#fafafa">
 </head>
 
-<body onload="displayTable(materialsToDisplay)"> <!-- Calls function when the page loads -->
+<body onload="displayByType('All', document.getElementById('allButton'))"> <!-- Calls function when the page loads -->
 <div id="wrapper">
   <header>
     <!-- Buttons for filtering categories -->
-    <button onclick="displayByType('All', this)">
+    <button onclick="displayByType('All', this)" id="allButton">
       <img src="img/header/all.png" width="150" alt="all_button"/>
       <h2>All</h2>
     </button>
