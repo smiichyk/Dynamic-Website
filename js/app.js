@@ -165,7 +165,7 @@ let lastSortColumnName = "name"
 
 // Active material type filter
 let activeType = 'All'
-let activeButton
+let activeButton = document.getElementById('allButton')
 
 // Flatten the materials data into a format suitable for display in a table
 let materialsToDisplay = getMaterials().flatMap(material =>
@@ -199,37 +199,41 @@ function getKeys() {
   return keys
 }
 
+// Arrays to store accepted and non-accepted items
 let acceptedItems = [""]
 let nonAcceptedItems = [""]
-function pushAcceptedAndNonAcceptedItems() {
-  getMaterials().forEach(material => {
-    material.categories.forEach(category => {
-      for (let i = 0; i < category.accepted_items.length; i++) {
-        acceptedItems.push(category.accepted_items[i])
-      }
-
-      for (let i = 0; i < category.non_accepted_items.length; i++) {
-        nonAcceptedItems.push(category.non_accepted_items[i])
-      }
-    })
-  })
-}
 pushAcceptedAndNonAcceptedItems()
-
-console.log(acceptedItems)
 
 function displayTable(materials) {
   // Start of table
   let htmlString = `<table><tr>`
 
   // Header row with column names
-  htmlString += `<th>Images</th>`
+  htmlString += th() + `</tr>`
+
+  // Iterate through the materials to create the table rows
+  materials.forEach((item, index) => { htmlString += tr(item, index) })
+
+  // End of table
+  htmlString += `</table>`
+
+  // Display a table in the "categoriesTable" element
+  document.getElementById("categoriesTable").innerHTML = htmlString
+}
+
+function th() {
+  // Initialize the table header string with a column for images
+  let htmlString = `<th>Images</th>`
+
+  // Create column headers based on keys returned from getKeys()
   getKeys().forEach(key => {
     htmlString += `<th onclick="sort('${key}')">
                     ${key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}
                     ${lastSortColumnName === key ? sortAscendingOrder === true ? "▲" : "▼" : ""}
                    </th>`
   })
+
+  // Add a "Tag" column
   htmlString += `<th>Tag</th>`
 
   // Add category button column
@@ -238,39 +242,39 @@ function displayTable(materials) {
                         <img src="img/work_with_category/add.png" height="50" alt="add_button"/>
                     </button>
                  </th>`
-  htmlString += `</tr>`
 
-  // Iterate through the materials to create the table rows
-  materials.forEach((item, index) => {
+  return htmlString
+}
 
-    // Start a row with the background color
-    htmlString += `<tr style="background: ${getBinColour(item.type)}" onclick="displayTableRow(${index})">`
+function tr(item, index) {
+  // Start a row with the background color
+  let htmlString = `<tr style="background: ${getBinColour(item.type)}" onclick="displayTableRow(${index})">`
 
-    // Display images for each category if it exists
-    htmlString += `<td data-label="image">`
-    for (let i = 0; i < item.image.length; i++) {
-      if (item.image[i] !== "") {
-        htmlString += `<img src="${item.image[i] || 'img/image.png'}" alt="category image" width="100"/>`
-      }
+  // Display images for each category if it exists
+  htmlString += `<td data-label="image">`
+  for (let i = 0; i < item.image.length; i++) {
+    if (item.image[i] !== "") {
+      htmlString += `<img src="${item.image[i] || 'img/image.png'}" alt="category image" width="100"/>`
     }
-    htmlString += `</td>`
+  }
+  htmlString += `</td>`
 
-    // Display other material details
-    getKeys().forEach((key, index) => {
-      if (index === 3) {
-        htmlString += `<td data-label="${key}">${item.accepted_items_to_display}</td>`
-      } else if (index === 4) {
-        htmlString += `<td data-label="${key}">${item.non_accepted_items_to_display}</td>`
-      }else {
-        htmlString += `<td data-label="${key}">${item[key]}</td>`
-      }
-    })
+  // Display other material details
+  getKeys().forEach((key, index) => {
+    if (index === 3) {
+      htmlString += `<td data-label="${key}">${item.accepted_items_to_display}</td>`
+    } else if (index === 4) {
+      htmlString += `<td data-label="${key}">${item.non_accepted_items_to_display}</td>`
+    }else {
+      htmlString += `<td data-label="${key}">${item[key]}</td>`
+    }
+  })
 
-    // Display tag for each category if it exists
-    htmlString += `<td data-label="tag"><p class="tags" style="background: ${getTagColour(item.tag)}">${item.tag || ""}</p></td>`
+  // Display tag for each category if it exists
+  htmlString += `<td data-label="tag"><p class="tags" style="background: ${getTagColour(item.tag)}">${item.tag || ""}</p></td>`
 
-    // Add modify/delete buttons
-    htmlString += `<td data-label="actions" id="modify_delete">
+  // Add modify/delete buttons
+  htmlString += `<td data-label="actions" id="modify_delete">
                   <button onClick="event.stopPropagation(); deleteCategory(${index})">
                     <img src="img/work_with_category/delete.png" width="50" alt="delete_button"/>
                   </button>
@@ -282,21 +286,22 @@ function displayTable(materials) {
                    </button>
                 </td>`
 
-    // End a row
-    htmlString += `</tr>`
-  })
+  // End a row
+  htmlString += `</tr>`
 
-  // End of table
-  htmlString += `</table>`
-
-  // Display a table in the "categoriesTable" element
-  document.getElementById("categoriesTable").innerHTML = htmlString
+  return htmlString
 }
 
 function displayTableRow(index) {
+  // Hide other modal windows if they are open
   modalWindowDisplayNone()
+
+  // Show modal window
   tableRowModal.style.display = "block"
-  let item = materialsToDisplay[index]
+
+  // Get the selected item based on the filtered materials list
+  let item = getFilteredMaterialsByActiveType()[index]
+
   // Display a table in the "displayTableRow" element
   let htmlString = `
     <table id="tableRowModal">
@@ -333,6 +338,8 @@ function displayTableRow(index) {
              `
   document.getElementById("displayTableRow").innerHTML = htmlString
   let span = document.querySelector("#displayTableRow .close")
+
+  // Close the modal when the close button (×) is clicked
   span.onclick = function() {
     tableRowModal.style.display = "none"
   }
@@ -359,11 +366,15 @@ function getTagColour(tag) {
 function displayByType(type, clickedButton) {
   activeType = type // Set active type to the selected one
   activeButton = clickedButton  // Set active button to the clicked one
+
+  // Display all materials if 'All' is selected, otherwise filter by type
   if (type === 'All') {
     displayTable(materialsToDisplay)
   } else {
     displayTable(materialsToDisplay.filter(material => material.type === type))
   }
+
+  // Highlight the active button to indicate the current selection
   setActiveButton(clickedButton)
 }
 
@@ -376,17 +387,24 @@ function sort(key) {
     lastSortColumnName = key
     sortAscendingOrder = true
   }
+
   // Sorting based on the selected column
   materialsToDisplay.sort((a, b) =>
     sortAscendingOrder ? a[key].toLowerCase() < b[key].toLowerCase() ? -1 : 1
                        : a[key].toLowerCase() < b[key].toLowerCase() ? 1 : -1
   )
+
+  // Refresh the display after sorting
   displayByType(activeType, activeButton)
 }
 
 function addCategoryInput() {
+  // Hide other modal windows if they are open
   modalWindowDisplayNone()
+
+  // Show modal window
   addCategoryModal.style.display = "block"
+
   // Display a table in the "addCategory" element
   document.getElementById("addCategory").innerHTML = `
     <label for="type"></label><select id="type">
@@ -420,6 +438,8 @@ function addCategoryInput() {
      )">Add</button>
     <span class="close">&times;</span>
   `
+
+  // Close modal when the close button is clicked
   let span = document.querySelector("#addCategory .close")
   span.onclick = function() {
     modalWindowDisplayNone()
@@ -429,8 +449,12 @@ function addCategoryInput() {
 function addCategoryAccept() {
   let accepted_list = document.getElementById('acceptedItems').value.split(",").map(item => item.trim())
   let non_accepted_list = document.getElementById('nonAcceptedItems').value.split(",").map(item => item.trim())
+
+  // Check for missing items in the predefined accepted/non-accepted lists
   let missingAcceptedItems = accepted_list.filter(item => !acceptedItems.includes(item))
   let missingNonAcceptedItems = non_accepted_list.filter(item => !nonAcceptedItems.includes(item))
+
+  // Show alert if there are missing items, otherwise add the category
   if (missingAcceptedItems.length > 0 || missingNonAcceptedItems.length > 0) {
     displayAlert(missingAcceptedItems, missingNonAcceptedItems)
   } else {
@@ -463,25 +487,26 @@ function addCategory(type, imageUrls, name, recycling_code, recycling_process, a
     environmental_impact: environmental_impact,
     type: type
   }
+
+  // Add the new category to the materials list and refresh the display
   materialsToDisplay.push(newCategory)
   displayByType(activeType, activeButton)
+
+  // Hide the modal after adding
   addCategoryModal.style.display = "none"
 }
 
 function modifyCategoryOpenModal(index) {
+  // Hide other modal windows if they are open
   modalWindowDisplayNone()
+
+  // Show modal window
   modifyCategoryModal.style.display = "block"
   modifyCategoryInput(index)
 }
 
 function modifyCategoryInput(index) {
-  let mtd
-  if (activeType === 'All') {
-    mtd = materialsToDisplay
-  } else {
-    mtd = materialsToDisplay.filter(material => material.type === activeType)
-  }
-  mtd.forEach((item, i) => {
+  getFilteredMaterialsByActiveType().forEach((item, i) => {
     if (index === i) {
       // Display a table in the "modifyCategory" element
       document.getElementById("modifyCategory").innerHTML = `
@@ -500,6 +525,8 @@ function modifyCategoryInput(index) {
       <span class="close">&times;</span>
     `
     }
+
+    // Close modal when the close button is clicked
     let span = document.querySelector("#modifyCategory .close")
     span.onclick = function() {
       modalWindowDisplayNone()
@@ -510,8 +537,12 @@ function modifyCategoryInput(index) {
 function modifyCategoryAccept(index) {
   let accepted_list = document.getElementById('modifyAcceptedItems').value.split(",").map(item => item.trim())
   let non_accepted_list = document.getElementById('modifyNonAcceptedItems').value.split(",").map(item => item.trim())
+
+  // Filter out items that are missing from the current accepted and non-accepted items
   let missingAcceptedItems = accepted_list.filter(item => !acceptedItems.includes(item))
   let missingNonAcceptedItems = non_accepted_list.filter(item => !nonAcceptedItems.includes(item))
+
+  // If there are missing items, show an alert, otherwise, modify the category
   if (missingAcceptedItems.length > 0 || missingNonAcceptedItems.length > 0) {
     displayAlert(missingAcceptedItems, missingNonAcceptedItems)
   } else {
@@ -520,13 +551,7 @@ function modifyCategoryAccept(index) {
 }
 
 function modifyCategory(categoryIndex) {
-  let mtd
-  if (activeType === 'All') {
-    mtd = materialsToDisplay
-  } else {
-    mtd = materialsToDisplay.filter(material => material.type === activeType)
-  }
-  mtd.forEach((item, index) => {
+  getFilteredMaterialsByActiveType().forEach((item, index) => {
     // Modify the category
     if (categoryIndex === index) {
       let images
@@ -545,7 +570,11 @@ function modifyCategory(categoryIndex) {
       item.environmental_impact = document.getElementById('modifyEnvironmentalImpact').value
     }
   })
+
+  // Refresh the display with the updated materials
   displayByType(activeType, activeButton)
+
+  // Close the modal after category modification
   modifyCategoryModal.style.display = "none"
 }
 
@@ -553,19 +582,26 @@ function deleteCategory(index) {
   // Confirm deletion before proceeding
   if (confirm("Are you sure you want to delete this category?")) {
     if (activeType === 'All') {
+      // If the activeType is 'All', delete the category directly from the materialsToDisplay array
       materialsToDisplay.splice(index, 1)
     } else {
+      // If a specific type is active, filter materials by type, then find the material to delete
       const filteredMaterials = materialsToDisplay.filter(material => material.type === activeType)
       const materialToDelete = filteredMaterials[index]
       const originalIndex = materialsToDisplay.indexOf(materialToDelete)
+      // Delete the material from the original materialsToDisplay array
       materialsToDisplay.splice(originalIndex, 1)
     }
+    // Refresh the display
     displayByType(activeType, activeButton);
   }
 }
 
 function tagOpenModal(index) {
+  // Hide other modal windows if they are open
   modalWindowDisplayNone()
+
+  // Show modal window
   modifyTagModal.style.display = "block"
   tagInput(index)
 }
@@ -581,6 +617,7 @@ function tagInput(index) {
     <input type="button" value="Delete Tag" onclick="deleteTag(${index})" style="background: #ee5252"/>
     <span class="close">&times;</span>
   `
+  // Set up the close button to close the modal when clicked
   let span = document.querySelector("#modifyTag .close")
   span.onclick = function() {
     modifyTagModal.style.display = "none"
@@ -588,47 +625,44 @@ function tagInput(index) {
 }
 
 function addTag(tag, index) {
-  let mtd
-  if (activeType === 'All') {
-    mtd = materialsToDisplay
-  } else {
-    mtd = materialsToDisplay.filter(material => material.type === activeType)
-  }
-  mtd.forEach((item, i) => {
+  // Loop through the materials and set the tag for the material at the given index
+  getFilteredMaterialsByActiveType().forEach((item, i) => {
     if (index === i) {
       item.tag = tag
     }
   })
+  // Refresh the display after the tag is added
   displayByType(activeType, activeButton)
+  // Close the modal window
   modifyTagModal.style.display = "none"
 }
 
 function deleteTag(index) {
-  let mtd
-  if (activeType === 'All') {
-    mtd = materialsToDisplay
-  } else {
-    mtd = materialsToDisplay.filter(material => material.type === activeType)
-  }
-  mtd.forEach((item, i) => {
+  // Loop through the materials and remove the tag for the material at the given index
+  getFilteredMaterialsByActiveType().forEach((item, i) => {
     if (index === i) {
       item.tag = ""
     }
   })
+  // Refresh the display after the tag is deleted
   displayByType(activeType, activeButton)
+  // Close the modal window
   modifyTagModal.style.display = "none"
 }
 
 function setActiveButton(clickedButton) {
+  // If no button is clicked, exit the function
   if (!clickedButton) return
-  // Toggle active state for buttons
+  // Remove the 'active' class from all buttons in the header
   document.querySelectorAll("header button").forEach(button => {
     button.classList.remove("active")
   })
+  // Add the 'active' class to the clicked button
   clickedButton.classList.add("active")
 }
 
 function modalWindowDisplayNone() {
+  // Set the display style of each modal to "none" to hide them
   addCategoryModal.style.display = "none"
   modifyCategoryModal.style.display = "none"
   modifyTagModal.style.display = "none"
@@ -636,6 +670,7 @@ function modalWindowDisplayNone() {
 }
 
 function displayAlert(missingAcceptedItems, missingNonAcceptedItems) {
+  // Show an alert with missing items, or "None" if there are no missing items
   return alert(`The following items are not supported:\n
     ❌ Missing Accepted Items: ${missingAcceptedItems.join(", ") || "None"}\n
     ❌ Missing Non-Accepted Items: ${missingNonAcceptedItems.join(", ") || "None"}\n
@@ -643,16 +678,45 @@ function displayAlert(missingAcceptedItems, missingNonAcceptedItems) {
 }
 
 function displayAcceptedItems() {
-  return alert(`✅ Supported Accepted Items: ${acceptedItems.join(", ")}.\n`)
+  // Show an alert with the supported accepted items
+  return alert(`✅ Supported Accepted Items:\n${acceptedItems.join(", ")}.\n
+  Please enter the items as a comma-separated list.`)
 }
 
 function displayNonAcceptedItems() {
-  return alert(`✅ Supported Non-Accepted Items: ${nonAcceptedItems.join(", ")}.\n`)
+  // Show an alert with the supported non-accepted items
+  return alert(`✅ Supported Non-Accepted Items:\n${nonAcceptedItems.join(", ")}.\n
+  Please enter the items as a comma-separated list.`)
 }
 
 function setAccepted_itemsAndNon_accepted_items() {
   materialsToDisplay.forEach(item => {
     item.accepted_items = item.accepted_items_to_display
     item.non_accepted_items = item.non_accepted_items_to_display
+  })
+}
+
+function getFilteredMaterialsByActiveType() {
+  // If the active type is 'All', return all materials
+  if (activeType === 'All') {
+    return  materialsToDisplay
+  } else {
+    // Otherwise, return materials that match the active type
+    return  materialsToDisplay.filter(material => material.type === activeType)
+  }
+}
+
+function pushAcceptedAndNonAcceptedItems() {
+  getMaterials().forEach(material => {
+    material.categories.forEach(category => {
+      // Add all accepted items from the category to the acceptedItems array
+      for (let i = 0; i < category.accepted_items.length; i++) {
+        acceptedItems.push(category.accepted_items[i])
+      }
+      // Add all non-accepted items from the category to the nonAcceptedItems array
+      for (let i = 0; i < category.non_accepted_items.length; i++) {
+        nonAcceptedItems.push(category.non_accepted_items[i])
+      }
+    })
   })
 }
