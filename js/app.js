@@ -1,3 +1,13 @@
+// Use the fetch() method to read the data from the JSON file and display the data in a table
+// let materials_
+// window.onload = () => {
+//    let url = 'recycling.json'
+//    fetch(url)
+//      .then(response => response.json())
+//      .then(jsonData => {
+//        materials_ = jsonData.categories
+//      })
+// }
 
 // Function to get material data, including categories and recycling information.
 function getMaterials() {
@@ -147,17 +157,6 @@ window.onclick = function(event) {
     modifyTagModal.style.display = "none"
   }
 }
-
-// Use the fetch() method to read the data from the JSON file and display the data in a table
-// let materials_
-// window.onload = () => {
-//    let url = 'recycling.json'
-//    fetch(url)
-//      .then(response => response.json())
-//      .then(jsonData => {
-//        materials_ = jsonData.categories
-//      })
-// }
 
 // Declaration variables for sort() function
 let sortAscendingOrder = true
